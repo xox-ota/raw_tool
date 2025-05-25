@@ -65,6 +65,11 @@ def get_metadata(file_path):
 
 def do_rename(file_path, m):
     origin_name = file_path.split("/")[-1].split(".")[0]
+    if 'ISO' in origin_name:
+        origin_name = ""
+    else:
+        origin_name = " " + origin_name
+
     suffix = file_path.split(".")[-1]
 
     exposure = m.get('ExposureTime', '').replace("/", "_")
@@ -72,8 +77,9 @@ def do_rename(file_path, m):
     if suffix == "DNG":
         new_name = f"{m['DateTime']} {m['FNumber']} {exposure} ISO{m['ISO']}.{suffix}"
     else:
-        new_name = f"{m['DateTime']} {m['FNumber']} {exposure} ISO{m['ISO']} {m['FocalLength']} {m['LensModel']} {m['Model']}.{suffix}"
+        new_name = f"{m['DateTime']} {m['FNumber']} {exposure} ISO{m['ISO']} {m['FocalLength']} {m['LensModel']} {m['Model']}{origin_name}.{suffix}"
     new_fp = os.path.join(os.path.dirname(file_path), new_name)
+    # print(new_fp)
     os.rename(file_path, new_fp)
 
 
